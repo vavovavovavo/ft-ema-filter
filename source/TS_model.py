@@ -15,6 +15,75 @@ from utils.features import *
 
 
 class TS_model():
+    '''
+    Класс для построения и оценки моделей временных рядов с различными методами сглаживания и регрессии.
+
+    Параметры:
+    ----------
+    freq_thresh : float, optional
+        Порог частоты для фильтрации спектра при использовании преобразования Фурье 
+        (применяется, если type='FOURIER').
+    
+    ts : pandas.DataFrame, optional
+        Исходный временной ряд в виде DataFrame с колонками ['date', 'price'] или ['date', 'ruo'].
+        Если не задан, данные будут загружены автоматически на основе ts_name.
+    
+    ts_name : str, optional
+        Имя набора данных: 'SSE50' (индекс SSE 50) или 'RUO' (ставка RUONIA). 
+        Определяет источник данных при автоматической загрузке.
+    
+    lag : int, default=7
+        Количество лагов (предыдущих значений ряда), используемых для создания признаков 
+        в задаче регрессии.
+    
+    type : str, default='BASE'
+        Тип предобработки временного ряда. Возможные значения:
+        - 'BASE': без сглаживания,
+        - 'EMA': экспоненциальное скользящее среднее,
+        - 'KALMAN': фильтр Калмана,
+        - 'FOURIER': спектральное сглаживание через преобразование Фурье,
+        - 'ALL': запуск всех методов сглаживания (результаты сохраняются в ts_smoothed).
+    
+    prcnt : float, default=0.85
+        Доля обучающей выборки (от 0 до 1). Остальные данные используются для теста.
+    
+    window : int, default=0
+        Размер окна для локального преобразования Фурье (применяется при type='FOURIER').
+    
+    ema_span : int, default=5
+        Параметр сглаживания (span) для экспоненциального скользящего среднего (EMA).
+    
+    kalman_params : dict, optional
+        Параметры фильтра Калмана (в текущей реализации не используется).
+    
+    model_name : str, optional
+        Название модели машинного обучения. Возможные значения:
+        - 'Ridge',
+        - 'Random Forest',
+        - 'XGB'.
+    
+    metric : str, default='MAE_MAPE'
+        Метрика(и) для оценки качества модели. Возможные значения:
+        - 'MAE': средняя абсолютная ошибка,
+        - 'MAPE': средняя абсолютная процентная ошибка,
+        - 'MAE_MAPE': обе метрики одновременно.
+    
+    # Параметры модели Random Forest:
+    criterion : str, optional
+    max_depth : int, optional
+    min_samples_leaf : int, optional
+    n_estimators : int, optional
+    
+    # Параметры модели XGBoost:
+    gamma : float, optional
+    learning_rate : float, optional
+    max_depth : int, optional
+    n_estimators : int, optional
+    
+    # Параметр модели Ridge:
+    alpha : float, optional
+        Коэффициент регуляризации L2 для регрессии Риджа.
+    '''
     def __init__(self, freq_thresh = None, ts = None,  ts_name = None, 
                  lag = 7,type = 'BASE', prcnt = 0.85, window = 0, 
                  ema_span = 5, kalman_params = None,

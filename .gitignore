@@ -1,5 +1,6 @@
 #virtul env
 venv/
+experiments/
 
 
 #cache
@@ -7,7 +8,7 @@ __pycache__/
 *.pyc
 
 #exps
-experiments\*.json
+
 *.ipynb
 
 #id
