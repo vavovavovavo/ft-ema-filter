@@ -1,0 +1,15 @@
+#virtul env
+venv/
+
+
+#cache
+__pycache__/
+*.pyc
+
+#exps
+experiments\*.json
+*.ipynb
+
+#id
+.vscode/
+
